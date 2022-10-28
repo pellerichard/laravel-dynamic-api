@@ -30,11 +30,21 @@ You should now have a `config/dynamic-api.php` file that allows you to configure
 ## Endpoint access:
 
 Default Endpoints:
-- Retrieve every entities: `GET /api/v1/dynamic-api`
-- Retrieve all entities within a table by table name: `GET /api/v1/dynamic-api?table_name=currencies`
-- Retrieve specific entity within a table by table name and table id: `GET /api/v1/dynamic-api?table_name=currencies&table_id=1`
-- Create an entity: `POST /api/v1/dynamic-api?table_name=currencies&table_id=1&currency=USD&value=100`
-- Update a specific entity by table name and table id: `PATCH /api/v1/dynamic-api?table_name=people&table_id=1&age=5&height=180cm`
+
+Retrieve every entities:
+> **GET** /api/v1/dynamic-api
+
+Retrieve all entities within a table by table name:
+> **GET** /api/v1/dynamic-api?table_name=currencies
+
+Retrieve specific entity within a table by table name and table id:
+> **GET** /api/v1/dynamic-api?table_name=currencies&table_id=1
+
+Create an entity:
+> **POST** /api/v1/dynamic-api?table_name=currencies&table_id=1&currency=USD&value=100
+
+Update a specific entity by table name and table id:
+> **PATCH** /api/v1/dynamic-api?table_name=people&table_id=1&age=5&height=180cm
 
 ## Manual access:
 

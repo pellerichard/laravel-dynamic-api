@@ -2,14 +2,18 @@
   "name": "pellerichard/laravel-dynamic-api",
   "description": "Laravel Dynamic API",
   "license": "MIT",
+  "support": {
+    "issues": "https://github.com/pellerichard/laravel-dynamic-api/issues",
+    "source": "https://github.com/pellerichard/laravel-dynamic-api"
+  },
   "keywords": [
     "laravel-dynamic-api"
   ],
   "type": "library",
   "authors": [
     {
-      "name": "",
-      "email": ""
+      "name": "Pelle Richárd",
+      "email": "whadez@icloud.com"
     }
   ],
   "require": {

@@ -27,7 +27,16 @@ Publish the config:
 
 You should now have a `config/dynamic-api.php` file that allows you to configure the basics of this package.
 
-## Example for manual access:
+## Endpoint access:
+
+Default Endpoints:
+- Retrieve every entities: `GET /api/v1/dynamic-api`
+- Retrieve all entities within a table by table name: `GET /api/v1/dynamic-api?table_name=currencies`
+- Retrieve specific entity within a table by table name and table id: `GET /api/v1/dynamic-api?table_name=currencies&table_id=1`
+- Create an entity: `POST /api/v1/dynamic-api?table_name=currencies&table_id=1&currency=USD&value=100`
+- Update a specific entity by table name and table id: `PATCH /api/v1/dynamic-api?table_name=people&table_id=1&age=5&height=180cm`
+
+## Manual access:
 
 ```php
 // Retrieve every entity.
@@ -62,4 +71,38 @@ ApiService::destroy([
     'table_name' => 'my_table_name',
     'table_id' => 1
 ]);
+```
+### Customization options
+
+```php
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Create Endpoints
+    |--------------------------------------------------------------------------
+    |
+    | If you wish to create the default endpoints set this value to true.
+    |
+    */
+
+    'endpoints' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Endpoint Rules
+    |--------------------------------------------------------------------------
+    |
+    | Endpoints must be allowed in order for this functionality to take event.
+    | Prefix (Route prefix for instance: 'api/v1/dynamic-api/')
+    | Middleware (Route middleware which must pass in order to reach the endpoints, common example: ['api', 'web'])
+    |
+    */
+
+    'endpoint_rules' => [
+        'prefix' => 'api/v1/dynamic-api/',
+        'middleware' => [],
+    ],
+];
 ```

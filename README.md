@@ -49,6 +49,8 @@ Update a specific entity by table name and table id:
 ## Manual access:
 
 ```php
+use Pellerichard\LaravelDynamicApi\Services\Facades\ApiService;
+
 // Retrieve every entity.
 ApiService::index([]);
 

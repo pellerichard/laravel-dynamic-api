@@ -22,8 +22,8 @@ class UpdateRequest extends AbstractFormRequest
     public function rules(): array
     {
         return [
-            'table_id' => 'required|integer',
-            'table_name' => 'required|string',
+            'record_id' => 'required|integer',
+            'type' => 'required|string',
         ];
     }
 }

@@ -4,8 +4,8 @@ namespace Pellerichard\LaravelDynamicApi\Http\Repositories;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Pellerichard\LaravelDynamicApi\Http\Repositories\Contracts\ApiRepositoryInterface;
 use Pellerichard\LaravelDynamicApi\Models\DynamicApi;
 
@@ -19,51 +19,64 @@ class ApiRepository implements ApiRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getAll(Collection $filter): LengthAwarePaginator
+    public function getAll(Collection $filter): LengthAwarePaginator|EloquentCollection
+    {
+        $result = $this->model
+            ->statements($filter);
+
+        if (! $filter->get('withPagination')) {
+            return $result->get();
+        }
+
+        return $result->paginate(perPage: $filter->get('per_page'));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findOneByTypeAndRecordId(Collection $filter, string $type, int $recordId): Model
     {
         return $this->model
-            ->when(
-                value: $filter->get('table_name') !== null,
-                callback: fn (Builder $query, string $value) => $query->where('table_name', '=', $filter->get('table_name'))
-            )
-            ->when(
-                value: $filter->get('table_id') !== null,
-                callback: fn (Builder $query, int $value) => $query->where('table_id', '=', $filter->get('table_id'))
-            )
-            ->paginate(perPage: $filter->get('per_page'));
+            ->where(column: [
+                'type' => $type,
+                'record_id' => $recordId,
+            ])
+            ->firstOrFail();
     }
 
     /**
      * @inheritDoc
      */
-    public function findOneByTableNameAndTableId(string $tableName, int $tableId): Model
+    public function destroyByRecordIdAndType(int $recordId, string $type): bool
     {
-        return $this->model->where(column: [
-            'table_name' => $tableName,
-            'table_id' => $tableId,
-        ])->firstOrFail();
+        return $this->model
+            ->where(column: [
+                'type' => $type,
+                'record_id' => $recordId,
+            ])
+            ->firstOrFail()
+            ->deleteOrFail();
     }
 
     /**
      * @inheritDoc
      */
-    public function destroyByTableIdAndTableNameId(int $tableId, string $tableName): bool
+    public function updateByRecordIdAndTypeWithData(int $recordId, string $type, array $data): bool
     {
-        return $this->model->where(column: [
-            'table_name' => $tableName,
-            'table_id' => $tableId,
-        ])->firstOrFail()->deleteOrFail();
-    }
+        /** @var DynamicApi $model */
+        $this->model->data = $this->findOneByTypeAndRecordId(
+            filter: collect(),
+            type: $type,
+            recordId: $recordId,
+        )?->mergeDataWithArray($data);
 
-    /**
-     * @inheritDoc
-     */
-    public function updateByTableIdAndTableNameWithData(int $tableId, string $tableName, array $data): bool
-    {
-        return $this->model->where(column: [
-            'table_name' => $tableName,
-            'table_id' => $tableId,
-        ])->firstOrFail()->update(attributes: $data);
+        return $this->model
+            ->where(column: [
+                'type' => $type,
+                'record_id' => $recordId,
+            ])
+            ->firstOrFail()
+            ->update(attributes: ['data' => $this->model->getDataAsJson()]);
     }
 
     /**
@@ -71,8 +84,9 @@ class ApiRepository implements ApiRepositoryInterface
      */
     public function create(array $data): Model
     {
-        return $this->model->create(
-            attributes: $data
-        );
+        return $this->model
+            ->create(
+                attributes: $data
+            );
     }
 }

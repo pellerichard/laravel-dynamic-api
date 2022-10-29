@@ -12,9 +12,9 @@ class DynamicApiResource extends AbstractJsonResource
     public function toArray($request): array
     {
         return [
-            'table_id' => $this->table_id,
-            'table_name' => $this->table_name,
-            'table_data' => json_decode($this->table_data, true),
+            'record_id' => $this->record_id,
+            'type' => $this->type,
+            'data' => json_decode($this->data, true),
         ];
     }
 }

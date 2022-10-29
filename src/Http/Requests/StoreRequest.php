@@ -22,7 +22,7 @@ class StoreRequest extends AbstractFormRequest
     public function rules(): array
     {
         return [
-            'table_name' => 'required|string',
+            'type' => 'required|string',
         ];
     }
 }

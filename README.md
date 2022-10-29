@@ -25,6 +25,10 @@ Publish the config:
 
 `php artisan vendor:publish --provider="Pellerichard\LaravelDynamicApi\DynamicApiServiceProvider"`
 
+Run the migration:
+
+`php artisan migrate`
+
 You should now have a `config/dynamic-api.php` file that allows you to configure the basics of this package.
 
 ## Endpoint access:
@@ -35,55 +39,70 @@ Retrieve every entities:
 > **GET** /api/v1/dynamic-api
 
 Retrieve all entities within a table by table name:
-> **GET** /api/v1/dynamic-api?table_name=currencies
+> **GET** /api/v1/dynamic-api?type=currencies
 
 Retrieve specific entity within a table by table name and table id:
-> **GET** /api/v1/dynamic-api?table_name=currencies&table_id=1
+> **GET** /api/v1/dynamic-api?type=currencies&record_id=1
 
 Create an entity:
-> **POST** /api/v1/dynamic-api?table_name=currencies&table_id=1&currency=USD&value=100
+> **POST** /api/v1/dynamic-api?type=currencies&record_id=1&currency=USD&value=100
 
 Update a specific entity by table name and table id:
-> **PATCH** /api/v1/dynamic-api?table_name=people&table_id=1&age=5&height=180cm
+> **PATCH** /api/v1/dynamic-api?type=people&record_id=1&age=5&height=180cm
 
 ## Manual access:
 
 ```php
 use Pellerichard\LaravelDynamicApi\Services\Facades\ApiService;
 
-// Retrieve every entity.
-ApiService::index([]);
-
-// Retrieve a specific entity.
-ApiService::index([
-    'table_name' => 'my_table_name',
-    'table_id' => 1
-]);
-
 // Create an entity.
-ApiService::store([
-    'table_name' => 'my_table_name',
-    'table_id' => 1,
-    'my_amazing_column' => 'Hello World!',
-    'my_favourite_song' => 'nyancat',
-    'test' => true
-]);
+ApiService::builder()
+    ->setType(type: 'human')
+    ->setAttributes(attributes: [
+        'first_name' => 'Richárd',
+        'last_name' => 'Pelle',
+        'age' => 23,
+        'occupation' => 'Full Stack Developer',
+    ])
+    ->create();
 
-// Update a specific entity.
-ApiService::update([
-    'table_name' => 'my_table_name',
-    'table_id' => 1,
-    'first_column' => 'Lorem Ipsum',
-    'second_column' => 'Dolor Sit',
-    'third_column' => 'Amet'
-]);
+// Get all entities.
+ApiService::builder()
+    ->withPagination(withPagination: false)
+    ->get();
 
-// Delete a specific entity.
-ApiService::destroy([
-    'table_name' => 'my_table_name',
-    'table_id' => 1
-]);
+// Get all entities with specific type.
+ApiService::builder()
+    ->whereType(type: 'human')
+    ->withPagination(withPagination: false)
+    ->get();
+
+// Get one specific entity, and return it's data.
+ApiService::builder()
+    ->whereType(type: 'human')
+    ->whereRecordId(recordId: 1)
+    ->first();
+
+// Update an entity.
+ApiService::builder()
+    ->whereType(type: 'human')
+    ->whereRecordId(recordId: 1)
+    ->setAttributes(attributes: [
+        'age' => 24,
+        'github_link' => 'https://github.com/pellerichard'
+    ])
+    ->update();
+
+// Delete an entity.
+ApiService::builder()
+    ->whereType(type: 'human')
+    ->whereRecordId(recordId: 1)
+    ->delete();
 ```
+### Available methods on Model
+> Method: getDataAsArray
+>
+Description: Returns the entity's data in array format.
 ### Customization options
 
 ```php

@@ -4,7 +4,7 @@ namespace Pellerichard\LaravelDynamicApi\Http\Repositories\Contracts;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 interface ApiRepositoryInterface
 {
@@ -13,40 +13,41 @@ interface ApiRepositoryInterface
      *
      * @param Collection $filter
      *
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator|Collection
      */
-    public function getAll(Collection $filter): LengthAwarePaginator;
+    public function getAll(Collection $filter): LengthAwarePaginator|Collection;
 
     /**
      * Returns a specific entity from the database.
      *
-     * @param string $tableName
-     * @param int $tableId
+     * @param Collection $filter
+     * @param string $type
+     * @param int $recordId
      *
      * @return Model
      */
-    public function findOneByTableNameAndTableId(string $tableName, int $tableId): Model;
+    public function findOneByTypeAndRecordId(Collection $filter, string $type, int $recordId): Model;
 
     /**
      * Destroys a specific entity from the database.
      *
-     * @param int $tableId
-     * @param string $tableName
+     * @param int $recordId
+     * @param string $type
      *
      * @return bool
      */
-    public function destroyByTableIdAndTableNameId(int $tableId, string $tableName): bool;
+    public function destroyByRecordIdAndType(int $recordId, string $type): bool;
 
     /**
      * Updates a specific entity in the database.
      *
-     * @param int $tableId
-     * @param string $tableName
+     * @param int $recordId
+     * @param string $type
      * @param array $data
      *
      * @return bool
      */
-    public function updateByTableIdAndTableNameWithData(int $tableId, string $tableName, array $data): bool;
+    public function updateByRecordIdAndTypeWithData(int $recordId, string $type, array $data): bool;
 
     /**
      * Creates an entity in the database.

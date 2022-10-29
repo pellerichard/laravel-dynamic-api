@@ -20,9 +20,9 @@ return new class extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('table_id');
-            $table->longText('table_name');
-            $table->longText('table_data');
+            $table->bigInteger('record_id');
+            $table->longText('type');
+            $table->longText('data');
             $table->softDeletes();
             $table->timestamps();
         });

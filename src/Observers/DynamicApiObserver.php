@@ -8,8 +8,8 @@ class DynamicApiObserver
 {
     public function creating(DynamicApi $dynamicApi): void
     {
-        $dynamicApi->table_id = (
-            $dynamicApi::where('table_name', '=', $dynamicApi->table_name)->orderBy('table_id', 'DESC')?->value('table_id') + 1
+        $dynamicApi->record_id = (
+            $dynamicApi::where('type', '=', $dynamicApi->type)->orderBy('record_id', 'DESC')?->value('record_id') + 1
         );
     }
 }

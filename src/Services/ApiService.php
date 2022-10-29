@@ -38,7 +38,7 @@ class ApiService extends AbstractService implements ApiServiceInterface
         $this->generalizeRequest(StoreRequest::class, $storeRequest);
 
         return $this->apiRepository->create(
-            data: $storeRequest->validated() + $storeRequest->getTableData()
+            data: $storeRequest->validated() + ['data' => json_encode($storeRequest->getTableData())]
         );
     }
 
@@ -49,9 +49,9 @@ class ApiService extends AbstractService implements ApiServiceInterface
     {
         $this->generalizeRequest(UpdateRequest::class, $updateRequest);
 
-        return $this->apiRepository->updateByTableIdAndTableNameWithData(
-            tableId: $updateRequest->get('table_id'),
-            tableName: $updateRequest->get('table_name'),
+        return $this->apiRepository->updateByRecordIdAndTypeWithData(
+            recordId: $updateRequest->get('record_id'),
+            type: $updateRequest->get('type'),
             data: $updateRequest->getTableData()
         );
     }
@@ -63,9 +63,9 @@ class ApiService extends AbstractService implements ApiServiceInterface
     {
         $this->generalizeRequest(DestroyRequest::class, $destroyRequest);
 
-        return $this->apiRepository->destroyByTableIdAndTableNameId(
-            tableId: $destroyRequest->get('table_id'),
-            tableName: $destroyRequest->get('table_name'),
+        return $this->apiRepository->destroyByRecordIdAndType(
+            recordId: $destroyRequest->get('record_id'),
+            type: $destroyRequest->get('type'),
         );
     }
 }

@@ -13,7 +13,7 @@ Pros:
 - Perfect for Micro sites / Micro services, and for small projects
 
 Cons:
-- Relatively slow due to the data saving mechanism.
+- Slower than standard solutions due to the data saving mechanism.
 
 ## Installation
 
@@ -39,16 +39,16 @@ Retrieve every entities:
 > **GET** /api/v1/dynamic-api
 
 Retrieve all entities within a table by table name:
-> **GET** /api/v1/dynamic-api?type=currencies
+> **GET** /api/v1/dynamic-api?type=people
 
-Retrieve specific entity within a table by table name and table id:
-> **GET** /api/v1/dynamic-api?type=currencies&record_id=1
+Retrieve specific entity within a table by type and record_id:
+> **GET** /api/v1/dynamic-api?type=people&record_id=1
 
 Create an entity:
-> **POST** /api/v1/dynamic-api?type=currencies&record_id=1&currency=USD&value=100
+> **POST** /api/v1/dynamic-api?type=people&age=32&height=180cm&first_name=John&last_name=Doe
 
-Update a specific entity by table name and table id:
-> **PATCH** /api/v1/dynamic-api?type=people&record_id=1&age=5&height=180cm
+Update a specific entity by type and record_id:
+> **PATCH** /api/v1/dynamic-api?type=people&record_id=1&age=33
 
 ## Manual access:
 
